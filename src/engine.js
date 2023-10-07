@@ -43,7 +43,7 @@ fetch(csvPath)
       }
     });
     // set gravity to 0 so that papers don't fall
-    engine.world.gravity.y = 0.1;
+    engine.world.gravity.y = 0.05;
     // create ground
     var ground = Bodies.rectangle(400, 610, 810, 60, { isStatic: true,
       // make ground very soft so that papers don't bounce off of it
@@ -56,13 +56,13 @@ fetch(csvPath)
     });
     // put up walls to prevent papers from escaping
     var leftWall = Bodies.rectangle(-10, 300, 20, 600, { isStatic: true });
-    var rightWall = Bodies.rectangle(760, 300, 20, 600, { isStatic: true });
+    var rightWall = Bodies.rectangle(760, 300, 1, 600, { isStatic: true });
     // put up 5 vetical walls equally spaced out on the x axis
     var walls = [];
     for (var i = 0; i < 5; i++) {
       // make these walls transparent
       walls.push(
-        Bodies.rectangle(800 * (i/5.0), 300, 7, 600, { isStatic: true,
+        Bodies.rectangle(800 * (i/5.0), 300, 1, 600, { isStatic: true,
           render: {
             fillStyle: 'transparent',
           }, })
@@ -92,17 +92,12 @@ fetch(csvPath)
       // make the circles heavier based on the number of citations
       var mass = paper.num_citations * 10;
       // create the circle, use very high friction so that they don't slide around
-      var circle = Bodies.circle(x, 300, radius, {
+      var circle = Bodies.circle(x, 200, radius, {
         render: {
           fillStyle: color,
           lineWidth: 1,
           strokeStyle: backgroundColor,
         },
-        // mass: mass,
-        // frictionStatic: 0.1,
-        // friction: 0.1,
-        // restitution: 1,
-        // stiffness: 1,
       });
       // add the circle to the world
       Composite.add(engine.world, circle);
@@ -115,14 +110,6 @@ fetch(csvPath)
         // remove
       }
     }, 10);
-
-    // // for each paper create a rectangle, the size of which is determined by the number of citations
-    // var rectangles = papers.map((paper) => {
-    //   // use logarithm to scale the size of the rectangles
-    //   var radius = Math.log(paper.num_citations) * 2 + 1;
-    //   // randomly place the rectangles
-    //   return Bodies.rectangle(Math.random() * 800, Math.random() * 600, radius);
-    // });
 
     // add all of the bodies to the world
     Composite.add(engine.world, [...walls, ground, leftWall, rightWall]);
